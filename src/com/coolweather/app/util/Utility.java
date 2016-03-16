@@ -18,7 +18,6 @@ public class Utility {
 					Province province =  new Province();
 					province.setProvinceCode(array[0]);
 					province.setProvinceName(array[1]);
-					Log.d("handleProvince", "provinceCode is"+array[0] + "provinceName is" + array [1]);
 					coolWeatherDB.saveProvince(province);
 				}
 				return true;

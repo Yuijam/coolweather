@@ -67,6 +67,7 @@ public class ChooseAreaActivity extends Activity{
 					queryCities();
 				}else if (currentLevel == LEVEL_CITY) {
 					selectedCity = cityList.get(index);
+					Log.d("onFinish", "clicked county");
 					queryCounties();
 				}
 			}
@@ -107,8 +108,10 @@ public class ChooseAreaActivity extends Activity{
 	}
 	
 	private void queryCounties(){
+		Log.d("onFinish","queryCounties");
 		countyList = coolWeatherDB.loadCounties(selectedCity.getId());
-		if(cityList.size() > 0){
+		if(countyList.size() > 0){
+			Log.d("onFinish","cityList.size > 0");
 			dataList.clear();
 			for(County county : countyList){
 				dataList.add(county.getCountyName());
@@ -118,6 +121,7 @@ public class ChooseAreaActivity extends Activity{
 			titleText.setText(selectedCity.getCityName());
 			currentLevel = LEVEL_COUNTY;
 		}else{
+			Log.d("onFinish", "queryFromServer");
 			queryFromServer(selectedCity.getCityCode(),"county");
 		}
 	}
@@ -129,7 +133,7 @@ public class ChooseAreaActivity extends Activity{
 		}else {
 			address = "http://www.weather.com.cn/data/list3/city.xml";
 		}
-//		showProgressDialog();
+		showProgressDialog();
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
 			
 			@Override
@@ -149,6 +153,9 @@ public class ChooseAreaActivity extends Activity{
 				}else if ("county".equals(type)){
 					Log.d("onFinish", "type is county");
 					result = Utility.handleCountiesResponse(coolWeatherDB, response, selectedCity.getId());
+					if(!result){
+						Log.d("onFinish", "result is FALSE!!");
+					}
 				}
 				
 				if(result){
@@ -156,7 +163,7 @@ public class ChooseAreaActivity extends Activity{
 						
 						@Override
 						public void run() {
-//							closeProgressDialog();
+							closeProgressDialog();
 							if("province".equals(type)){
 								queryProvinces();
 							}else if("city".equals(type)){
